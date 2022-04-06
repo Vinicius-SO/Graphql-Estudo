@@ -1,7 +1,29 @@
-function App() {
+import { gql, useQuery } from "@apollo/client"
 
+interface User {
+  id:string
+  name:string
+}
+
+const GET_USER = gql`
+  query {
+    users {
+      id
+      name
+    }
+  }
+`
+ 
+
+function App() {
+  const { data, loading } = useQuery<{users:User[]}>(GET_USER)
+  if(loading) {
+    return <p>Carregando...</p>
+  }
   return (
-    <h1> Hello world</h1>
+    <ul>
+      {data?.users.map(user => <li key={user.id}>{user.name}</li>)}
+    </ul>
   )
 }
 
